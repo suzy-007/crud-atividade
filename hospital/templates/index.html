@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Hospital</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>Sistema Hospitalar</h1>
+
+</header>
+
+
+<main>
+
+
+<!-- =====================================
+     PACIENTES
+===================================== -->
+
+<section>
+
+<h2>Pacientes</h2>
+
+
+<form
+    action="/paciente/cadastrar"
+    method="POST"
+>
+
+    <input
+        type="text"
+        name="nome"
+        placeholder="Nome"
+        required
+    >
+
+    <input
+        type="number"
+        name="idade"
+        placeholder="Idade"
+        required
+    >
+
+    <input
+        type="text"
+        name="cpf"
+        placeholder="CPF"
+        required
+    >
+
+    <button type="submit">
+        Cadastrar
+    </button>
+
+</form>
+
+
+<table>
+
+<tr>
+
+    <th>Nome</th>
+    <th>Idade</th>
+    <th>CPF</th>
+    <th>Ações</th>
+
+</tr>
+
+
+{% for paciente in pacientes %}
+
+<tr>
+
+<td>
+    {{ paciente.nome }}
+</td>
+
+<td>
+    {{ paciente.idade }}
+</td>
+
+<td>
+    {{ paciente.cpf }}
+</td>
+
+<td>
+
+<a href="/paciente/excluir/{{ paciente.id }}">
+    <button class="excluir">
+        Excluir
+    </button>
+</a>
+
+
+<form
+    action="/paciente/editar/{{ paciente.id }}"
+    method="POST"
+    class="editar"
+>
+
+    <input
+        type="text"
+        name="nome"
+        value="{{ paciente.nome }}"
+        required
+    >
+
+    <input
+        type="number"
+        name="idade"
+        value="{{ paciente.idade }}"
+        required
+    >
+
+    <input
+        type="text"
+        name="cpf"
+        value="{{ paciente.cpf }}"
+        required
+    >
+
+    <button>
+        Salvar
+    </button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</section>
+
+
+<!-- =====================================
+     MÉDICOS
+===================================== -->
+
+<section>
+
+<h2>Médicos</h2>
+
+
+<form
+    action="/medico/cadastrar"
+    method="POST"
+>
+
+    <input
+        type="text"
+        name="nome"
+        placeholder="Nome"
+        required
+    >
+
+    <input
+        type="text"
+        name="especialidade"
+        placeholder="Especialidade"
+        required
+    >
+
+    <input
+        type="text"
+        name="crm"
+        placeholder="CRM"
+        required
+    >
+
+    <button>
+        Cadastrar
+    </button>
+
+</form>
+
+
+<table>
+
+<tr>
+
+<th>Nome</th>
+<th>Especialidade</th>
+<th>CRM</th>
+<th>Ações</th>
+
+</tr>
+
+
+{% for medico in medicos %}
+
+<tr>
+
+<td>
+    {{ medico.nome }}
+</td>
+
+<td>
+    {{ medico.especialidade }}
+</td>
+
+<td>
+    {{ medico.crm }}
+</td>
+
+<td>
+
+<a href="/medico/excluir/{{ medico.id }}">
+
+<button class="excluir">
+    Excluir
+</button>
+
+</a>
+
+
+<form
+    action="/medico/editar/{{ medico.id }}"
+    method="POST"
+    class="editar"
+>
+
+<input
+    type="text"
+    name="nome"
+    value="{{ medico.nome }}"
+    required
+>
+
+<input
+    type="text"
+    name="especialidade"
+    value="{{ medico.especialidade }}"
+    required
+>
+
+<input
+    type="text"
+    name="crm"
+    value="{{ medico.crm }}"
+    required
+>
+
+<button>
+    Salvar
+</button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</section>
+
+
+<!-- =====================================
+     CONSULTAS
+===================================== -->
+
+<section>
+
+<h2>Consultas</h2>
+
+
+<form
+    action="/consulta/cadastrar"
+    method="POST"
+>
+
+<select name="pacienteId" required>
+
+<option value="">
+    Selecione o paciente
+</option>
+
+
+{% for paciente in pacientes %}
+
+<option value="{{ paciente.id }}">
+
+{{ paciente.nome }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<select name="medicoId" required>
+
+<option value="">
+    Selecione o médico
+</option>
+
+
+{% for medico in medicos %}
+
+<option value="{{ medico.id }}">
+
+{{ medico.nome }}
+-
+{{ medico.especialidade }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<input
+    type="date"
+    name="data"
+    required
+>
+
+
+<input
+    type="text"
+    name="motivo"
+    placeholder="Motivo"
+    required
+>
+
+
+<button>
+    Agendar
+</button>
+
+</form>
+
+
+<table>
+
+<tr>
+
+<th>Paciente</th>
+<th>Médico</th>
+<th>Data</th>
+<th>Motivo</th>
+<th>Ações</th>
+
+</tr>
+
+
+{% for consulta in consultas %}
+
+<tr>
+
+<td>
+    {{ consulta.paciente }}
+</td>
+
+<td>
+    {{ consulta.medico }}
+</td>
+
+<td>
+    {{ consulta.data }}
+</td>
+
+<td>
+    {{ consulta.motivo }}
+</td>
+
+<td>
+
+<a href="/consulta/excluir/{{ consulta.id }}">
+
+<button class="excluir">
+    Excluir
+</button>
+
+</a>
+
+
+<form
+    action="/consulta/editar/{{ consulta.id }}"
+    method="POST"
+    class="editar"
+>
+
+<select name="pacienteId">
+
+{% for paciente in pacientes %}
+
+<option
+    value="{{ paciente.id }}"
+    {% if paciente.id == consulta.pacienteId %}
+        selected
+    {% endif %}
+>
+
+{{ paciente.nome }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<select name="medicoId">
+
+{% for medico in medicos %}
+
+<option
+    value="{{ medico.id }}"
+    {% if medico.id == consulta.medicoId %}
+        selected
+    {% endif %}
+>
+
+{{ medico.nome }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<input
+    type="date"
+    name="data"
+    value="{{ consulta.data }}"
+>
+
+
+<input
+    type="text"
+    name="motivo"
+    value="{{ consulta.motivo }}"
+>
+
+
+<button>
+    Salvar
+</button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</section>
+
+
+</main>
+
+</body>
+
+</html>
